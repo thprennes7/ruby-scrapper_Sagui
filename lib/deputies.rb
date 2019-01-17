@@ -14,15 +14,12 @@ end
 
 def deputies_full_name
   deputies_array = []
-  page.xpath('//td[3]/a/@href').each do |link|
-    url_loader("https://www.nosdeputes.fr" + link).xpath('//h1').to_a.each do |full_names|
+  page.xpath('//div[@class="list_table"]//a/@href').each do |link|
+    url_loader("https://www.nosdeputes.fr" + link).xpath('//h1').to_a.each_with_index do |full_names, index|
+      email = url_loader("https://www.nosdeputes.fr" + link).xpath('//a[contains(@href, "@assemblee-nationale.fr")]/text()')[index].to_s
       split_name = full_names.text.to_s.split(' ')
-      hash_name = {"first_name":split_name[0], "last_name":split_name[1]}
+      hash_name = {"first_name": split_name[0], "last_name": split_name[1], "email": email}
       deputies_array.push(hash_name)
-    end
-    url_loader("https://www.nosdeputes.fr" + link).xpath('//a[@href*="mailto"]/text()').to_a.each_with_index do |emails, index|
-      email = emails.to_s
-      deputies_array[index]["email"] = email
     end
   end
   deputies_array
