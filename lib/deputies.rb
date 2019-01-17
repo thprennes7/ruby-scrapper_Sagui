@@ -18,11 +18,9 @@ def deputies_full_name
     url_loader("https://www.nosdeputes.fr" + link).xpath('//h1').to_a.each_with_index do |full_names, index|
       email = url_loader("https://www.nosdeputes.fr" + link).xpath('//a[contains(@href, "@assemblee-nationale.fr")]/text()')[index].to_s
       split_name = full_names.text.to_s.split(' ')
-      hash_name = {"first_name": split_name[0], "last_name": split_name[1], "email": email}
+      hash_name = { "first_name": split_name[0], "last_name": split_name[1], "email": email }
       deputies_array.push(hash_name)
     end
   end
   deputies_array
 end
-
-puts deputies_full_name
